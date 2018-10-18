@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Controller.ResumeActivity" android:background="@color/colorPrimary">
+
+
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="0dp"
+        android:layout_height="90dp"
+        android:layout_margin="8dp"
+        android:background="@color/colorWhite"
+        app:layout_constraintTop_toTopOf="parent"
+        card_view:cardCornerRadius="4dp"
+        card_view:layout_constraintEnd_toEndOf="parent"
+        card_view:layout_constraintStart_toStartOf="parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="17dp"
+                android:text="Tempo Esperado"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPink"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txtTempoEsperado_Resume"
+                android:layout_width="95dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="0"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textColor="@color/colorPink"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tempo Total"
+                android:textAllCaps="true"
+                android:layout_marginStart="140dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textColor="@color/colorAccent"/>
+
+            <TextView
+                android:id="@+id/txtTempoTotal_Resume"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="125dp"
+                android:text="0"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textColor="@color/colorAccent"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tempo Médio"
+                android:textAllCaps="true"
+                android:textColor="@color/cyanColor"
+                android:layout_marginStart="250dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txtTempoMedio_Resume"
+                android:layout_width="95dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="250dp"
+                android:text="0"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textColor="@color/cyanColor"/>
+
+            <TextView
+                android:id="@+id/txtAcertos_Resume"
+                android:layout_width="95dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="61dp"
+                android:layout_marginStart="45dp"
+                android:text="0"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textColor="@color/colocarSuccess"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Acertos"
+                android:textAllCaps="true"
+                android:textColor="@color/colocarSuccess"
+                android:layout_marginStart="60dp"
+                android:layout_marginTop="45dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/txtErros_Resume"
+                android:layout_width="95dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="61dp"
+                android:layout_marginStart="190dp"
+                android:text="0"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textColor="@color/colorDanger"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Erros"
+                android:textAllCaps="true"
+                android:textColor="@color/colorDanger"
+                android:layout_marginStart="215dp"
+                android:layout_marginTop="45dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+    <Button
+        android:id="@+id/btnVoltarInicio_Resume"
+        android:layout_width="match_parent"
+        android:textColor="@color/colorPrimary"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="444dp"
+        android:text="Voltar para Inicio"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="24sp"/>
+
+</android.support.constraint.ConstraintLayout>
