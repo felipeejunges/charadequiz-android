@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import br.com.desafios.charadequiz.Controller.LoginActivity;
 import br.com.desafios.charadequiz.Controller.MainActivity;
@@ -33,6 +34,8 @@ public class UsuarioLoginPreferences {
         editor.putString(EMAIL_USUARIO, usuario.getEmail());
         editor.putString(CelphoneNumber_USUARIO, usuario.getCelphoneNumber());
         editor.commit();
+
+        Log.d("usuario",usuario.toString());
 
         Intent irTelaMain = new Intent(context, MainActivity.class);
         irTelaMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
