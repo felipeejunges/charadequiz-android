@@ -64,9 +64,15 @@ public class DataStore {
 
     public boolean userRegister(String name, String email, String celPhone, String password) {
         // Novo Usuário
-        Usuario novoUsuario = new Usuario(-1, name,email,celPhone,password);
-        new AddUsuario(novoUsuario).execute("http://192.168.25.100/charadequizSlim/registro/");
-        return false;
+        Integer result;
+        result = ExecAddUsuario(GetJsonAddUsuario("http://192.168.25.100/charadequizSlim/registro/"));
+
+        //Usuario novoUsuario = new Usuario(-1, name,email,celPhone,password);
+        //new AddUsuario(novoUsuario).execute("http://192.168.25.100/charadequizSlim/registro/");
+        if (result != -1)
+            return true;
+        else
+            return false;
     }
 
     public Quiz newChallange(int idUsuario) {
@@ -84,6 +90,76 @@ public class DataStore {
         return new Quiz();
     }
 
+    protected String GetJsonAddUsuario(String... urls) {
+
+        String jsonStr = "";
+
+        try {
+            URL url = new URL(urls[0]);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(45000);
+            connection.setReadTimeout(30000);
+            connection.setRequestMethod("POST");
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+
+            Uri.Builder builder = new Uri.Builder();
+
+            builder.appendQueryParameter("Name", usuario.getName());
+            builder.appendQueryParameter("Cellphone_Number", usuario.getCelphoneNumber());
+            builder.appendQueryParameter("Email", usuario.getEmail());
+            builder.appendQueryParameter("Password", usuario.getPassword());
+
+            String qry = builder.build().getEncodedQuery();
+
+            OutputStream outputStream = connection.getOutputStream();
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
+            BufferedWriter writer = new BufferedWriter(outputStreamWriter);
+
+            writer.write(qry);
+            writer.flush();
+
+            writer.close();
+            outputStreamWriter.close();
+            outputStream.close();
+
+            connection.connect();
+
+            InputStream inputStream = connection.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            BufferedReader reader = new BufferedReader(inputStreamReader);
+
+            String line = reader.readLine();
+            while (line != null) {
+                jsonStr += line;
+                line = reader.readLine();
+            }
+
+            reader.close();
+            inputStreamReader.close();
+            inputStream.close();
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return jsonStr;
+    }
+
+    protected Integer ExecAddUsuario(String jsonStr) {
+        try {
+            JSONObject json = new JSONObject(jsonStr);
+            /*if (json.getInt("id") != -1){
+                usuario.setId(json.getInt("id"));
+            }*/
+            return json.getInt("id");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
 
     private class AddUsuario extends AsyncTask<String, Void, String> {
 
