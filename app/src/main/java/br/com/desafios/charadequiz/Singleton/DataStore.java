@@ -58,8 +58,9 @@ public class DataStore {
 
     public Usuario userLogin(String login, String senha) {
 
-        new LoginUsuario(login,senha).execute("http://192.168.25.100/charadequizSlim/login/");
-        return new Usuario();//userLogin.getUsuario();
+        return ExecLoginUsuario(GetJsonLogin("http://192.168.25.100/charadequizSlim/login/",login,senha));
+        //new LoginUsuario(login,senha).execute();
+        //return new Usuario();//userLogin.getUsuario();
     }
 
     public boolean userRegister(String name, String email, String celPhone, String password) {
@@ -148,6 +149,62 @@ public class DataStore {
         return jsonStr;
     }
 
+    protected String GetJsonLogin(String urls,String Email,String Senha) {
+
+        String jsonStr = "";
+
+        try {
+            URL url = new URL(urls);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(45000);
+            connection.setReadTimeout(30000);
+            connection.setRequestMethod("POST");
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+
+            Uri.Builder builder = new Uri.Builder();
+
+            builder.appendQueryParameter("Email", Email);
+            builder.appendQueryParameter("Senha", Senha);
+
+            String qry = builder.build().getEncodedQuery();
+
+            OutputStream outputStream = connection.getOutputStream();
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
+            BufferedWriter writer = new BufferedWriter(outputStreamWriter);
+
+            writer.write(qry);
+            writer.flush();
+
+            writer.close();
+            outputStreamWriter.close();
+            outputStream.close();
+
+            connection.connect();
+
+            InputStream inputStream = connection.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            BufferedReader reader = new BufferedReader(inputStreamReader);
+
+            String line = reader.readLine();
+            while (line != null) {
+                jsonStr += line;
+                line = reader.readLine();
+            }
+
+            reader.close();
+            inputStreamReader.close();
+            inputStream.close();
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return jsonStr;
+    }
+
     protected Integer ExecAddUsuario(String jsonStr) {
         try {
             JSONObject json = new JSONObject(jsonStr);
@@ -159,6 +216,24 @@ public class DataStore {
             e.printStackTrace();
             return -1;
         }
+    }
+
+    protected Usuario ExecLoginUsuario(String jsonStr) {
+        Usuario userResult = new Usuario();
+        try {
+            JSONObject json = new JSONObject(jsonStr);
+            if (json.getInt("id") != -1){
+
+                userResult.setId(json.getInt("id"));
+                userResult.setName(json.getString("name"));
+                userResult.setCelphoneNumber(json.getString("cellphone_number"));
+                userResult.setEmail(json.getString("email"));
+                userResult.setPassword(json.getString("password"));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return userResult;
     }
 
     private class AddUsuario extends AsyncTask<String, Void, String> {
