@@ -21,6 +21,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import br.com.desafios.charadequiz.Dto.MainDto;
+import br.com.desafios.charadequiz.Dto.ResumeDto;
 import br.com.desafios.charadequiz.Model.Answer;
 import br.com.desafios.charadequiz.Model.Quiz;
 import br.com.desafios.charadequiz.Model.Usuario;
@@ -301,6 +303,14 @@ public class DataStore {
 
     public Quiz newChallange(Integer usuarioId) {
         return new Quiz();
+    }
+
+    public ResumeDto pegarResumo() {
+        return null;
+    }
+
+    public MainDto pegarMain() {
+        return null;
     }
 
     private class AddUsuario extends AsyncTask<String, Void, String> {

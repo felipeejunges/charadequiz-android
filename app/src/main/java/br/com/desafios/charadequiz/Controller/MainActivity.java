@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import br.com.desafios.charadequiz.Dto.MainDto;
 import br.com.desafios.charadequiz.R;
 import br.com.desafios.charadequiz.Singleton.DataStore;
 
@@ -25,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
         DataStore.sharedInstance().getPreferences().naoEstaLogado();
 
         // Toda a logica
+
+        MainDto main = DataStore.sharedInstance().pegarMain();
     }
 
     public void onClickIWantAChallange(View v) {

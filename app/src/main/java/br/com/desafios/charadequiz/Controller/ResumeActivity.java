@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import br.com.desafios.charadequiz.Dto.ResumeDto;
 import br.com.desafios.charadequiz.R;
+import br.com.desafios.charadequiz.Singleton.DataStore;
 
 public class ResumeActivity extends Activity {
 
@@ -27,6 +29,9 @@ public class ResumeActivity extends Activity {
         txtTempoMedio_Resume = findViewById(R.id.txtTempoMedio_Resume);
         txtAcertos_Resume = findViewById(R.id.txtAcertos_Resume);
         txtErros_Resume = findViewById(R.id.txtErros_Resume);
+
+        ResumeDto resume = DataStore.sharedInstance().pegarResumo();
+
     }
 
     public void onBtnVoltar(View v) {
