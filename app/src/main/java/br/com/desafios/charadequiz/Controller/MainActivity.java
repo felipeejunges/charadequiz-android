@@ -9,12 +9,20 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 import br.com.desafios.charadequiz.Dto.MainDto;
 import br.com.desafios.charadequiz.R;
 import br.com.desafios.charadequiz.Singleton.DataStore;
 
 public class MainActivity extends AppCompatActivity {
+
+    TextView tvRespondidos;
+    TextView tvTotal;
+    TextView tvMedia;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +33,20 @@ public class MainActivity extends AppCompatActivity {
         DataStore.sharedInstance().setContext(this);
         DataStore.sharedInstance().getPreferences().naoEstaLogado();
 
+        tvRespondidos = findViewById(R.id.txtQntRespondidos_Main);
+        tvTotal = findViewById(R.id.txtTempoTotal_Main);
+        tvMedia = findViewById(R.id.txtTempoMedio_Main);
+
         // Toda a logica
 
         MainDto main = DataStore.sharedInstance().pegarMain();
+
+        tvRespondidos.setText(main.getRespondidos());
+        tvTotal.setText(new SimpleDateFormat("hh:mm:ss").format(new Timestamp(main.getTempoTotal())));
+        tvTotal.setText(new SimpleDateFormat("hh:mm:ss").format(new Timestamp(main.getTempoMedio())));
+
+
+
     }
 
     public void onClickIWantAChallange(View v) {
