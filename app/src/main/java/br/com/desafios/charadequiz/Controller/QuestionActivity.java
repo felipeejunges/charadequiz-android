@@ -100,6 +100,8 @@ public class QuestionActivity extends AppCompatActivity {
        DataStore.sharedInstance().getAnswers().add(new Answer(0, tempo, alternative, quiz));
         qntRespondidos++;
 
+        tvAtual.setText(0);
+
         if(qntRespondidos == fragments.size()) {
             DataStore.sharedInstance().saveResponses();
         }
