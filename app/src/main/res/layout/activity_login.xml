@@ -41,12 +41,12 @@
         android:id="@+id/txtLogin_Login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Login"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginTop="188dp"
+        android:hint="Login"
+        android:text="a@a.com"
         android:textColor="@color/colorWhite"
-        android:textColorHint="@color/greyColor"
+        android:textColorHint="@color/colorPrimaryDark"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -55,12 +55,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginTop="266dp"
-        android:textColorHint="@color/greyColor"
         android:ems="10"
         android:hint="Senha"
         android:inputType="textPassword"
+        android:text="123"
+        android:textColorHint="@color/greyColor"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

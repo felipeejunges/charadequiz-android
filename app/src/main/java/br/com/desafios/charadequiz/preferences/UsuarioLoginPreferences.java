@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.Toast;
 
 import br.com.desafios.charadequiz.Controller.LoginActivity;
 import br.com.desafios.charadequiz.Controller.MainActivity;
@@ -29,20 +30,24 @@ public class UsuarioLoginPreferences {
 
     public void salvarUsuario(Usuario usuario) {
         SharedPreferences.Editor editor = getEditor();
-        editor.putInt(ID_USUARIO, usuario.getId());
-        editor.putString(NAME_USUARIO, usuario.getName());
-        editor.putString(EMAIL_USUARIO, usuario.getEmail());
-        editor.putString(CelphoneNumber_USUARIO, usuario.getCelphoneNumber());
-        editor.commit();
+        if(usuario ==null) {
+            Toast.makeText(context, "Usuário e/ou senha incorretos", Toast.LENGTH_SHORT).show();
+        } else {
+            editor.putInt(ID_USUARIO, usuario.getId());
+            editor.putString(NAME_USUARIO, usuario.getName());
+            editor.putString(EMAIL_USUARIO, usuario.getEmail());
+            editor.putString(CelphoneNumber_USUARIO, usuario.getCelphoneNumber());
+            editor.commit();
 
-        Log.d("usuario",usuario.toString());
+            Log.d("usuario",usuario.toString());
 
-        Intent irTelaMain = new Intent(context, MainActivity.class);
-        irTelaMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
-        context.startActivity(irTelaMain);
-        ((Activity) context).finish();
+            Intent irTelaMain = new Intent(context, MainActivity.class);
+            irTelaMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
+            context.startActivity(irTelaMain);
+            ((Activity) context).finish();
 
+        }
     }
 
     private SharedPreferences.Editor getEditor() {
