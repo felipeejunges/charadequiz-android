@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+
 import br.com.desafios.charadequiz.Dto.ResumeDto;
 import br.com.desafios.charadequiz.R;
 import br.com.desafios.charadequiz.Singleton.DataStore;
@@ -31,6 +34,12 @@ public class ResumeActivity extends Activity {
         txtErros_Resume = findViewById(R.id.txtErros_Resume);
 
         ResumeDto resume = DataStore.sharedInstance().pegarResumo();
+
+        txtTempoEsperado_Resume.setText(new SimpleDateFormat("hh:mm:ss").format(new Timestamp(resume.getEsperado())));
+        txtTempoTotal_Resume.setText(new SimpleDateFormat("hh:mm:ss").format(new Timestamp(resume.getTotal())));
+        txtTempoMedio_Resume.setText(new SimpleDateFormat("hh:mm:ss").format(new Timestamp(resume.getEsperado())));
+        txtAcertos_Resume.setText(resume.getAcertos());
+        txtErros_Resume.setText(resume.getErros());
 
     }
 

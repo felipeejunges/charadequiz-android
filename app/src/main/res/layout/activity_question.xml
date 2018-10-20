@@ -55,7 +55,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
+            <Chronometer
                 android:id="@+id/txtTempoTotal_Quiz"
                 android:layout_width="95dp"
                 android:layout_height="wrap_content"
@@ -78,7 +78,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
+            <Chronometer
                 android:id="@+id/txtTempoMedio_Quiz"
                 android:layout_width="95dp"
                 android:layout_height="wrap_content"
