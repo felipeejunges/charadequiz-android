@@ -1,12 +1,10 @@
 package br.com.desafios.charadequiz.Singleton;
 
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.os.AsyncTask;
-
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,9 +16,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
-
 
 import br.com.desafios.charadequiz.Model.Answer;
 import br.com.desafios.charadequiz.Model.Quiz;
@@ -56,31 +55,55 @@ public class DataStore {
 
     }
 
+    public Usuario getUsuario(){
+        return usuario;
+    }
+
     public UsuarioLoginPreferences getPreferences() {
         return preferences;
     }
 
     public Usuario userLogin(String login, String senha) {
+        Log.d("teste",login + " " + senha);
+        /*String threadresult ="";
+        try {
+            threadresult =  new LoginUsuario(login,senha).execute("http://192.168.25.100/charadequizSlim/login/").get();
+            Log.d("threadresult",threadresult);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
-        return ExecLoginUsuario(GetJsonLogin("http://192.168.25.100/charadequizSlim/login/",login,senha));
-        //new LoginUsuario(login,senha).execute();
+        Log.d("usuario",usuario.toString());
+
+        return UsuarioFromJson(threadresult);//userLogin.getUsuario();
+*/
+       // Usuario nuser = ExecLoginUsuario(GetJsonLogin("http://192.168.25.100/charadequizSlim/login/",login,senha));
+            //new LoginUsuario(login,senha).execute();
         //return new Usuario();//userLogin.getUsuario();
+        //new LoginUsuario(login,senha).execute("http://192.168.25.100/charadequizSlim/login/");11111111111111111111111111111
+        //return usuario;//userLogin.getUsuario();
+
+        new LoginUsuario(login,senha).execute("http://192.168.25.100/charadequizSlim/login/");
+//        Log.d("usuario_result",usuario.toString());
+        return usuario;//userLogin.getUsuario();
     }
 
     public boolean userRegister(String name, String email, String celPhone, String password) {
         // Novo Usuário
         Integer result;
-        result = ExecAddUsuario(GetJsonAddUsuario("http://192.168.25.100/charadequizSlim/registro/"));
+        //result = ExecAddUsuario(GetJsonAddUsuario("http://192.168.25.100/charadequizSlim/registro/"));
 
-        //Usuario novoUsuario = new Usuario(-1, name,email,celPhone,password);
-        //new AddUsuario(novoUsuario).execute("http://192.168.25.100/charadequizSlim/registro/");
-        if (result != -1)
-            return true;
-        else
+        Usuario novoUsuario = new Usuario(-1, name,email,celPhone,password);
+        new AddUsuario(novoUsuario).execute("http://192.168.25.100/charadequizSlim/registro/");
+//        if (result != -1)
+//            return true;
+//        else
             return false;
     }
 
-    public Quiz newChallange(int idUsuario) {
+    public Quiz newChallenge(int idUsuario) {
         // Busca as perguntas do Quiz
         return new Quiz();
     }
@@ -95,6 +118,24 @@ public class DataStore {
     public Quiz generalResult(int id) {
         // Busca os dados
         return new Quiz();
+    }
+
+    public Usuario UsuarioFromJson(String jsonStr){
+        Usuario retorno = new Usuario();
+        try {
+            JSONObject json = new JSONObject(jsonStr);
+            if (json.getInt("id") != -1){
+
+                retorno.setId(json.getInt("id"));
+                retorno.setName(json.getString("name"));
+                retorno.setCelphoneNumber(json.getString("cellphone_number"));
+                retorno.setEmail(json.getString("email"));
+                retorno.setPassword(json.getString("password"));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return retorno;
     }
 
     protected String GetJsonAddUsuario(String... urls) {
@@ -258,14 +299,20 @@ public class DataStore {
         this.answers = answers;
     }
 
+    public Quiz newChallange(Integer usuarioId) {
+        return new Quiz();
+    }
+
     private class AddUsuario extends AsyncTask<String, Void, String> {
 
         private Usuario usuario;
+
 
         public AddUsuario(Usuario usuario) {
 
             this.usuario = usuario;
         }
+
 
         @Override
         protected String doInBackground(String... urls) {
@@ -345,10 +392,19 @@ public class DataStore {
 
         private String Email,Senha;
 
+        private ProgressDialog dialog = new ProgressDialog(context);
 
         public LoginUsuario(String Email, String Senha) {
             this.Email = Email;
             this.Senha = Senha;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            this.dialog.setMessage("Realizando Login");
+            this.dialog.show();
         }
 
         @Override
@@ -411,11 +467,11 @@ public class DataStore {
         @Override
         protected void onPostExecute(String jsonStr) {
             super.onPostExecute(jsonStr);
-            if(usuario == null) usuario = new Usuario();
+
             try {
                 JSONObject json = new JSONObject(jsonStr);
                 if (json.getInt("id") != -1){
-
+                    usuario = new Usuario();
                     usuario.setId(json.getInt("id"));
                     usuario.setName(json.getString("name"));
                     usuario.setCelphoneNumber(json.getString("cellphone_number"));
@@ -425,6 +481,12 @@ public class DataStore {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            DataStore.sharedInstance().getPreferences().salvarUsuario(usuario);
+
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+
         }
     }
     
