@@ -28,7 +28,7 @@ import br.com.desafios.charadequiz.Model.Question;
 import br.com.desafios.charadequiz.Model.Quiz;
 import br.com.desafios.charadequiz.R;
 import br.com.desafios.charadequiz.Singleton.DataStore;
-
+//https://codinginflow.com/tutorials/android/chronometer
 public class QuestionActivity extends AppCompatActivity {
 
     private CustomViewPager mPager;
