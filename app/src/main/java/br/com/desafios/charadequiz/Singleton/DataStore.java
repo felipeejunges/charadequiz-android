@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,11 +20,14 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import br.com.desafios.charadequiz.Dto.MainDto;
 import br.com.desafios.charadequiz.Dto.ResumeDto;
+import br.com.desafios.charadequiz.Model.Alternative;
 import br.com.desafios.charadequiz.Model.Answer;
+import br.com.desafios.charadequiz.Model.Question;
 import br.com.desafios.charadequiz.Model.Quiz;
 import br.com.desafios.charadequiz.Model.Usuario;
 import br.com.desafios.charadequiz.preferences.UsuarioLoginPreferences;
@@ -39,6 +43,10 @@ public class DataStore {
     private UsuarioLoginPreferences preferences;
     private Usuario usuario;
     private Context context;
+
+    private static String MeuIP = "http://fczcasa.ddns.net";
+
+    private MainDto mainDto;
 
     protected DataStore() {}
 
@@ -69,7 +77,7 @@ public class DataStore {
         Log.d("teste",login + " " + senha);
         /*String threadresult ="";
         try {
-            threadresult =  new LoginUsuario(login,senha).execute("http://192.168.25.100/charadequizSlim/login/").get();
+            threadresult =  new LoginUsuario(login,senha).execute(MeuIP + "/charadequizSlim/login/").get();
             Log.d("threadresult",threadresult);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -81,13 +89,13 @@ public class DataStore {
 
         return UsuarioFromJson(threadresult);//userLogin.getUsuario();
 */
-       // Usuario nuser = ExecLoginUsuario(GetJsonLogin("http://192.168.25.100/charadequizSlim/login/",login,senha));
+       // Usuario nuser = ExecLoginUsuario(GetJsonLogin(MeuIP + "/charadequizSlim/login/",login,senha));
             //new LoginUsuario(login,senha).execute();
         //return new Usuario();//userLogin.getUsuario();
-        //new LoginUsuario(login,senha).execute("http://192.168.25.100/charadequizSlim/login/");11111111111111111111111111111
+        //new LoginUsuario(login,senha).execute(MeuIP + "/charadequizSlim/login/");11111111111111111111111111111
         //return usuario;//userLogin.getUsuario();
 
-        new LoginUsuario(login,senha).execute("http://192.168.25.100/charadequizSlim/login/");
+        new LoginUsuario(login,senha).execute(MeuIP + "/charadequizSlim/login/");
 //        Log.d("usuario_result",usuario.toString());
         return usuario;//userLogin.getUsuario();
     }
@@ -95,10 +103,10 @@ public class DataStore {
     public boolean userRegister(String name, String email, String celPhone, String password) {
         // Novo Usuário
         Integer result;
-        //result = ExecAddUsuario(GetJsonAddUsuario("http://192.168.25.100/charadequizSlim/registro/"));
+        //result = ExecAddUsuario(GetJsonAddUsuario(MeuIP + "/charadequizSlim/registro/"));
 
         Usuario novoUsuario = new Usuario(-1, name,email,celPhone,password);
-        new AddUsuario(novoUsuario).execute("http://192.168.25.100/charadequizSlim/registro/");
+        new AddUsuario(novoUsuario).execute(MeuIP + "/charadequizSlim/registro/");
 //        if (result != -1)
 //            return true;
 //        else
@@ -106,7 +114,7 @@ public class DataStore {
     }
 
     public Quiz newChallenge(int idUsuario) {
-        // Busca as perguntas do Quiz
+        new GetNewQuiz(idUsuario).execute(MeuIP + "/charadequizSlim/getnewquiz/");
         return new Quiz();
     }
 
@@ -120,169 +128,6 @@ public class DataStore {
     public Quiz generalResult(int id) {
         // Busca os dados
         return new Quiz();
-    }
-
-    public Usuario UsuarioFromJson(String jsonStr){
-        Usuario retorno = new Usuario();
-        try {
-            JSONObject json = new JSONObject(jsonStr);
-            if (json.getInt("id") != -1){
-
-                retorno.setId(json.getInt("id"));
-                retorno.setName(json.getString("name"));
-                retorno.setCelphoneNumber(json.getString("cellphone_number"));
-                retorno.setEmail(json.getString("email"));
-                retorno.setPassword(json.getString("password"));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return retorno;
-    }
-
-    protected String GetJsonAddUsuario(String... urls) {
-
-        String jsonStr = "";
-
-        try {
-            URL url = new URL(urls[0]);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setConnectTimeout(45000);
-            connection.setReadTimeout(30000);
-            connection.setRequestMethod("POST");
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
-
-            Uri.Builder builder = new Uri.Builder();
-
-            builder.appendQueryParameter("Name", usuario.getName());
-            builder.appendQueryParameter("Cellphone_Number", usuario.getCelphoneNumber());
-            builder.appendQueryParameter("Email", usuario.getEmail());
-            builder.appendQueryParameter("Password", usuario.getPassword());
-
-            String qry = builder.build().getEncodedQuery();
-
-            OutputStream outputStream = connection.getOutputStream();
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
-            BufferedWriter writer = new BufferedWriter(outputStreamWriter);
-
-            writer.write(qry);
-            writer.flush();
-
-            writer.close();
-            outputStreamWriter.close();
-            outputStream.close();
-
-            connection.connect();
-
-            InputStream inputStream = connection.getInputStream();
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-            BufferedReader reader = new BufferedReader(inputStreamReader);
-
-            String line = reader.readLine();
-            while (line != null) {
-                jsonStr += line;
-                line = reader.readLine();
-            }
-
-            reader.close();
-            inputStreamReader.close();
-            inputStream.close();
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return jsonStr;
-    }
-
-    protected String GetJsonLogin(String urls,String Email,String Senha) {
-
-        String jsonStr = "";
-
-        try {
-            URL url = new URL(urls);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setConnectTimeout(45000);
-            connection.setReadTimeout(30000);
-            connection.setRequestMethod("POST");
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
-
-            Uri.Builder builder = new Uri.Builder();
-
-            builder.appendQueryParameter("Email", Email);
-            builder.appendQueryParameter("Senha", Senha);
-
-            String qry = builder.build().getEncodedQuery();
-
-            OutputStream outputStream = connection.getOutputStream();
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
-            BufferedWriter writer = new BufferedWriter(outputStreamWriter);
-
-            writer.write(qry);
-            writer.flush();
-
-            writer.close();
-            outputStreamWriter.close();
-            outputStream.close();
-
-            connection.connect();
-
-            InputStream inputStream = connection.getInputStream();
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-            BufferedReader reader = new BufferedReader(inputStreamReader);
-
-            String line = reader.readLine();
-            while (line != null) {
-                jsonStr += line;
-                line = reader.readLine();
-            }
-
-            reader.close();
-            inputStreamReader.close();
-            inputStream.close();
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return jsonStr;
-    }
-
-    protected Integer ExecAddUsuario(String jsonStr) {
-        try {
-            JSONObject json = new JSONObject(jsonStr);
-            /*if (json.getInt("id") != -1){
-                usuario.setId(json.getInt("id"));
-            }*/
-            return json.getInt("id");
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return -1;
-        }
-    }
-
-    protected Usuario ExecLoginUsuario(String jsonStr) {
-        Usuario userResult = new Usuario();
-        try {
-            JSONObject json = new JSONObject(jsonStr);
-            if (json.getInt("id") != -1){
-
-                userResult.setId(json.getInt("id"));
-                userResult.setName(json.getString("name"));
-                userResult.setCelphoneNumber(json.getString("cellphone_number"));
-                userResult.setEmail(json.getString("email"));
-                userResult.setPassword(json.getString("password"));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return userResult;
     }
 
     public Quiz getQuiz() {
@@ -302,16 +147,22 @@ public class DataStore {
     }
 
     public Quiz newChallange(Integer usuarioId) {
-        return new Quiz();
+        new GetNewQuiz(DataStore.sharedInstance().getPreferences().getUsuarioId()).execute(MeuIP + "/charadequizSlim/getnewquiz/");
+        return getQuiz();
     }
 
     public ResumeDto pegarResumo() {
+        new ResumeFinalDto(1).execute(MeuIP + "/charadequizSlim/resumoFinal/");
+
+        //TODO: Alterar ID..
         return null;
     }
 
     public MainDto pegarMain() {
+        new MainResume(DataStore.sharedInstance().getPreferences().getUsuarioId()).execute(MeuIP + "/charadequizSlim/resumoMain/");
         return null;
     }
+
 
     private class AddUsuario extends AsyncTask<String, Void, String> {
 
@@ -469,6 +320,7 @@ public class DataStore {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+
             }
 
             return jsonStr;
@@ -499,6 +351,326 @@ public class DataStore {
 
         }
     }
-    
+
+    private class MainResume extends AsyncTask<String, Void, String> {
+
+        private MainDto mainresume;
+
+        int userid;
+
+        private ProgressDialog dialog = new ProgressDialog(context);
+
+        public MainResume(int id) {
+            this.userid = id;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            this.dialog.setMessage("Carregando Resumo Principal");
+            this.dialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+
+            String jsonStr = "";
+
+            try {
+                URL url = new URL(urls[0]);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setConnectTimeout(45000);
+                connection.setReadTimeout(30000);
+                connection.setRequestMethod("GET");
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+
+                Uri.Builder builder = new Uri.Builder();
+                builder.appendQueryParameter("userid", String.valueOf(userid));
+                String qry = builder.build().getEncodedQuery();
+
+                OutputStream outputStream = connection.getOutputStream();
+                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
+                BufferedWriter writer = new BufferedWriter(outputStreamWriter);
+
+                writer.write(qry);
+                writer.flush();
+
+                writer.close();
+                outputStreamWriter.close();
+                outputStream.close();
+
+                connection.connect();
+
+                InputStream inputStream = connection.getInputStream();
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader reader = new BufferedReader(inputStreamReader);
+
+                String line = reader.readLine();
+                while (line != null) {
+                    jsonStr += line;
+                    line = reader.readLine();
+                }
+
+                reader.close();
+                inputStreamReader.close();
+                inputStream.close();
+
+                Log.d("JsonResultMainResume",jsonStr);
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return jsonStr;
+        }
+
+        @Override
+        protected void onPostExecute(String jsonStr) {
+            super.onPostExecute(jsonStr);
+
+            try {
+                JSONObject json = new JSONObject(jsonStr);
+                    mainDto = new MainDto();
+                    mainDto.setRespondidos( json.getInt("Total_Respondidos"));
+                    mainDto.setTempoMedio(  json.getInt("Tempo_Medio"));
+                    mainDto.setTempoTotal(  json.getInt("Tempo_Total"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            DataStore.sharedInstance().getPreferences().salvarUsuario(usuario);
+
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+        }
+    }
+
+    private class ResumeFinalDto extends AsyncTask<String, Void, String> {
+
+        private ResumeDto resumeDto;
+
+        int id;
+
+        private ProgressDialog dialog = new ProgressDialog(context);
+
+        public ResumeFinalDto(int id) {
+            this.id = id;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            this.dialog.setMessage("Carregando Resumo Principal");
+            this.dialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+
+            String jsonStr = "";
+
+            try {
+                URL url = new URL(urls[0]);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setConnectTimeout(45000);
+                connection.setReadTimeout(30000);
+                connection.setRequestMethod("GET");
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+
+                Uri.Builder builder = new Uri.Builder();
+                builder.appendQueryParameter("id", String.valueOf(id));
+                String qry = builder.build().getEncodedQuery();
+
+                OutputStream outputStream = connection.getOutputStream();
+                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
+                BufferedWriter writer = new BufferedWriter(outputStreamWriter);
+
+                writer.write(qry);
+                writer.flush();
+
+                writer.close();
+                outputStreamWriter.close();
+                outputStream.close();
+
+                connection.connect();
+
+                InputStream inputStream = connection.getInputStream();
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader reader = new BufferedReader(inputStreamReader);
+
+                String line = reader.readLine();
+                while (line != null) {
+                    jsonStr += line;
+                    line = reader.readLine();
+                }
+
+                reader.close();
+                inputStreamReader.close();
+                inputStream.close();
+
+                Log.d("JsonResultResumeDto",jsonStr);
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return jsonStr;
+        }
+
+        @Override
+        protected void onPostExecute(String jsonStr) {
+            super.onPostExecute(jsonStr);
+
+            try {
+                JSONObject json = new JSONObject(jsonStr);
+                resumeDto = new ResumeDto();
+                resumeDto.setAcertos    ( json.getInt("Total_Corretas"));
+                resumeDto.setErros      ( json.getInt("Total_Erradas"));
+                resumeDto.setEsperado   ( json.getInt("Tempo_Esperado"));
+                resumeDto.setMedio      ( json.getInt("Tempo_Medio"));
+                resumeDto.setTotal      ( json.getInt("Tempo_Total"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            DataStore.sharedInstance().getPreferences().salvarUsuario(usuario);
+
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+        }
+    }
+
+    private class GetNewQuiz extends AsyncTask<String, Void, String> {
+
+        private Quiz quiz;
+        int userid;
+
+        private ProgressDialog dialog = new ProgressDialog(context);
+
+        public GetNewQuiz(int userid) {
+            this.userid = userid;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            this.dialog.setMessage("Gerando novo quiz!");
+            this.dialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+
+            String jsonStr = "";
+
+            try {
+                URL url = new URL(urls[0]);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setConnectTimeout(45000);
+                connection.setReadTimeout(30000);
+                connection.setRequestMethod("GET");
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+
+                Uri.Builder builder = new Uri.Builder();
+                builder.appendQueryParameter("userid", String.valueOf(userid));
+                String qry = builder.build().getEncodedQuery();
+
+                OutputStream outputStream = connection.getOutputStream();
+                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
+                BufferedWriter writer = new BufferedWriter(outputStreamWriter);
+
+                writer.write(qry);
+                writer.flush();
+
+                writer.close();
+                outputStreamWriter.close();
+                outputStream.close();
+
+                connection.connect();
+
+                InputStream inputStream = connection.getInputStream();
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader reader = new BufferedReader(inputStreamReader);
+
+                String line = reader.readLine();
+                while (line != null) {
+                    jsonStr += line;
+                    line = reader.readLine();
+                }
+
+                reader.close();
+                inputStreamReader.close();
+                inputStream.close();
+
+                Log.d("JsonResultGetNewQuiz",jsonStr);
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return jsonStr;
+        }
+
+        @Override
+        protected void onPostExecute(String jsonStr) {
+            super.onPostExecute(jsonStr);
+
+            try {
+                JSONObject json = new JSONObject(jsonStr);
+                quiz = new Quiz();
+
+                quiz.setId              ( json.getInt("idQuiz"));
+                //quiz.setAnswers              ( json.getInt("QuestionID"));
+                //TODO: Criar Answer no WebService.
+
+                List<Question> questions = new ArrayList<>();
+
+                JSONArray c = json.getJSONArray("questions");
+                for (int i = 0 ; i < c.length(); i++)
+                {
+                    JSONObject obj = c.getJSONObject(i);
+                    Question _quest = new Question();
+                    _quest.setId(obj.getInt("QuestionID"));
+                    _quest.setDescription(obj.getString("QuestionDescription"));
+                    _quest.setMaxtime(obj.getInt("QuestionMaxTime"));
+
+
+                    List<Alternative> alternatives = new ArrayList<>();
+                    JSONArray d = json.getJSONArray("Alternatives");
+                    for (int z = 0 ; z < d.length(); z++)
+                    {
+                        JSONObject objalt = d.getJSONObject(i);
+                        Alternative _alt = new Alternative();
+
+                        _alt.setId(objalt.getInt("id"));
+                        _alt.setAnswer(objalt.getString("Answer"));
+                        _alt.setCorrect(objalt.getBoolean("correct"));
+                        _alt.setUnactive(objalt.getBoolean("inactive"));
+
+                        alternatives.add(_alt);
+                    }
+                    questions.add(_quest);
+                }
+
+                quiz.setQuestions(questions);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            DataStore.sharedInstance().getPreferences().salvarUsuario(usuario);
+
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+        }
+    }
 
 }

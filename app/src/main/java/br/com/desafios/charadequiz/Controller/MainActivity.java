@@ -45,8 +45,7 @@ public class MainActivity extends AppCompatActivity {
         tvTotal.setText(new SimpleDateFormat("hh:mm:ss").format(new Timestamp(main.getTempoTotal())));
         tvTotal.setText(new SimpleDateFormat("hh:mm:ss").format(new Timestamp(main.getTempoMedio())));
 
-
-
+//        MainDto main = DataStore.sharedInstance().pegarMain();
     }
 
     public void onClickIWantAChallange(View v) {
@@ -56,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
