@@ -22,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import br.com.desafios.charadequiz.Dto.MainDto;
 import br.com.desafios.charadequiz.Dto.ResumeDto;
@@ -113,10 +114,7 @@ public class DataStore {
             return false;
     }
 
-    public Quiz newChallenge(int idUsuario) {
-        new GetNewQuiz(idUsuario).execute(MeuIP + "/charadequizSlim/getnewquiz/");
-        return new Quiz();
-    }
+
 
     public Quiz saveResponses() {
         // Pega o anwer do datastore mesmo
@@ -147,7 +145,36 @@ public class DataStore {
     }
 
     public Quiz newChallange(Integer usuarioId) {
-        new GetNewQuiz(DataStore.sharedInstance().getPreferences().getUsuarioId()).execute(MeuIP + "/charadequizSlim/getnewquiz/");
+        try {
+            new GetNewQuiz(usuarioId).execute(MeuIP + "/charadequizSlim/getnewquiz/" + usuarioId).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        // while(!get.isCancelled()) {}
+//        while(true) {
+//            try {
+//                get.get();
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            } catch (ExecutionException e) {
+//                e.printStackTrace();
+//            }
+//            String getStatus = String.valueOf(get.getStatus());
+//            String terminado = String.valueOf(Status.FINISHED);
+//            if(terminado == getStatus || (quiz != null && quiz.getId() > 0)) {
+//                break;
+//            }
+//        }
+//        try {
+//            quiz = new GetNewQuiz(usuarioId).execute(MeuIP + "/charadequizSlim/getnewquiz/" + usuarioId).get();
+//            return getQuiz();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
         return getQuiz();
     }
 
@@ -159,7 +186,7 @@ public class DataStore {
     }
 
     public MainDto pegarMain() {
-        new MainResume(DataStore.sharedInstance().getPreferences().getUsuarioId()).execute(MeuIP + "/charadequizSlim/resumoMain/");
+        new MainResume(getPreferences().getUsuarioId()).execute(MeuIP + "/charadequizSlim/resumoMain/");
         return null;
     }
 
@@ -343,7 +370,7 @@ public class DataStore {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            DataStore.sharedInstance().getPreferences().salvarUsuario(usuario);
+            getPreferences().salvarUsuario(usuario);
 
             if (dialog.isShowing()) {
                 dialog.dismiss();
@@ -440,7 +467,7 @@ public class DataStore {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            DataStore.sharedInstance().getPreferences().salvarUsuario(usuario);
+            getPreferences().salvarUsuario(usuario);
 
             if (dialog.isShowing()) {
                 dialog.dismiss();
@@ -538,7 +565,7 @@ public class DataStore {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            DataStore.sharedInstance().getPreferences().salvarUsuario(usuario);
+            getPreferences().salvarUsuario(usuario);
 
             if (dialog.isShowing()) {
                 dialog.dismiss();
@@ -548,8 +575,10 @@ public class DataStore {
 
     private class GetNewQuiz extends AsyncTask<String, Void, String> {
 
-        private Quiz quiz;
+       // private Quiz quiz;
         int userid;
+
+
 
         private ProgressDialog dialog = new ProgressDialog(context);
 
@@ -576,24 +605,6 @@ public class DataStore {
                 connection.setConnectTimeout(45000);
                 connection.setReadTimeout(30000);
                 connection.setRequestMethod("GET");
-                connection.setDoInput(true);
-                connection.setDoOutput(true);
-
-                Uri.Builder builder = new Uri.Builder();
-                builder.appendQueryParameter("userid", String.valueOf(userid));
-                String qry = builder.build().getEncodedQuery();
-
-                OutputStream outputStream = connection.getOutputStream();
-                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
-                BufferedWriter writer = new BufferedWriter(outputStreamWriter);
-
-                writer.write(qry);
-                writer.flush();
-
-                writer.close();
-                outputStreamWriter.close();
-                outputStream.close();
-
                 connection.connect();
 
                 InputStream inputStream = connection.getInputStream();
@@ -617,17 +628,12 @@ public class DataStore {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return jsonStr;
-        }
 
-        @Override
-        protected void onPostExecute(String jsonStr) {
-            super.onPostExecute(jsonStr);
-
+            quiz = new Quiz();
             try {
                 JSONObject json = new JSONObject(jsonStr);
-                quiz = new Quiz();
 
+                Log.d("JsonResultGetNewQuiz",jsonStr);
                 quiz.setId              ( json.getInt("idQuiz"));
                 //quiz.setAnswers              ( json.getInt("QuestionID"));
                 //TODO: Criar Answer no WebService.
@@ -637,6 +643,11 @@ public class DataStore {
                 JSONArray c = json.getJSONArray("questions");
                 for (int i = 0 ; i < c.length(); i++)
                 {
+                    // Para fins de testes e academicos
+                    if(i == 5) {
+                        break;
+                    }
+
                     JSONObject obj = c.getJSONObject(i);
                     Question _quest = new Question();
                     _quest.setId(obj.getInt("QuestionID"));
@@ -645,27 +656,37 @@ public class DataStore {
 
 
                     List<Alternative> alternatives = new ArrayList<>();
-                    JSONArray d = json.getJSONArray("Alternatives");
+                    JSONArray d = obj.getJSONArray("Alternatives");
                     for (int z = 0 ; z < d.length(); z++)
                     {
-                        JSONObject objalt = d.getJSONObject(i);
+                        JSONObject objalt = d.getJSONObject(z);
                         Alternative _alt = new Alternative();
 
                         _alt.setId(objalt.getInt("id"));
-                        _alt.setAnswer(objalt.getString("Answer"));
-                        _alt.setCorrect(objalt.getBoolean("correct"));
-                        _alt.setUnactive(objalt.getBoolean("inactive"));
+                        _alt.setAnswer(objalt.getString("answer"));
+                     //   _alt.setCorrect(objalt.getBoolean("correct"));
+                      //  _alt.setUnactive(objalt.getBoolean("inactive"));
 
                         alternatives.add(_alt);
                     }
+                    _quest.setAlternatives(alternatives);
                     questions.add(_quest);
+
                 }
 
                 quiz.setQuestions(questions);
             } catch (JSONException e) {
+                Log.d("jsonStr", jsonStr);
                 e.printStackTrace();
             }
-            DataStore.sharedInstance().getPreferences().salvarUsuario(usuario);
+
+            return jsonStr;
+        }
+
+        @Override
+        protected void onPostExecute(String jsonStr) {
+            super.onPostExecute(jsonStr);
+
 
             if (dialog.isShowing()) {
                 dialog.dismiss();
