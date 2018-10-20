@@ -1,9 +1,13 @@
 package br.com.desafios.charadequiz.Controller;
 
+import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
@@ -104,7 +108,20 @@ public class QuestionActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        // Programar para para aparecer messager
+        AlertDialog.Builder message = new AlertDialog.Builder(this);
+        message.setTitle("Tem certeza que deseja sair do Quiz?");
+        message.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent irTelaMain = new Intent(QuestionActivity.this, MainActivity.class);
+                irTelaMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                        | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(irTelaMain);
+                finish();
+            }
+        });
+        message.setNegativeButton("Não", null);
+        message.show();
     }
 
     public Timestamp stringToHour(String str) {
