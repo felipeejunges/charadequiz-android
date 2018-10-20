@@ -44,6 +44,8 @@ public class DataStore {
     private Usuario usuario;
     private Context context;
 
+    private static String MeuIP = "http://fczcasa.ddns.net";
+
     private MainDto mainDto;
 
     protected DataStore() {}
@@ -75,7 +77,7 @@ public class DataStore {
         Log.d("teste",login + " " + senha);
         /*String threadresult ="";
         try {
-            threadresult =  new LoginUsuario(login,senha).execute("http://192.168.25.100/charadequizSlim/login/").get();
+            threadresult =  new LoginUsuario(login,senha).execute(MeuIP + "/charadequizSlim/login/").get();
             Log.d("threadresult",threadresult);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -87,13 +89,13 @@ public class DataStore {
 
         return UsuarioFromJson(threadresult);//userLogin.getUsuario();
 */
-       // Usuario nuser = ExecLoginUsuario(GetJsonLogin("http://192.168.25.100/charadequizSlim/login/",login,senha));
+       // Usuario nuser = ExecLoginUsuario(GetJsonLogin(MeuIP + "/charadequizSlim/login/",login,senha));
             //new LoginUsuario(login,senha).execute();
         //return new Usuario();//userLogin.getUsuario();
-        //new LoginUsuario(login,senha).execute("http://192.168.25.100/charadequizSlim/login/");11111111111111111111111111111
+        //new LoginUsuario(login,senha).execute(MeuIP + "/charadequizSlim/login/");11111111111111111111111111111
         //return usuario;//userLogin.getUsuario();
 
-        new LoginUsuario(login,senha).execute("http://192.168.25.100/charadequizSlim/login/");
+        new LoginUsuario(login,senha).execute(MeuIP + "/charadequizSlim/login/");
 //        Log.d("usuario_result",usuario.toString());
         return usuario;//userLogin.getUsuario();
     }
@@ -101,10 +103,10 @@ public class DataStore {
     public boolean userRegister(String name, String email, String celPhone, String password) {
         // Novo Usuário
         Integer result;
-        //result = ExecAddUsuario(GetJsonAddUsuario("http://192.168.25.100/charadequizSlim/registro/"));
+        //result = ExecAddUsuario(GetJsonAddUsuario(MeuIP + "/charadequizSlim/registro/"));
 
         Usuario novoUsuario = new Usuario(-1, name,email,celPhone,password);
-        new AddUsuario(novoUsuario).execute("http://192.168.25.100/charadequizSlim/registro/");
+        new AddUsuario(novoUsuario).execute(MeuIP + "/charadequizSlim/registro/");
 //        if (result != -1)
 //            return true;
 //        else
@@ -112,7 +114,7 @@ public class DataStore {
     }
 
     public Quiz newChallenge(int idUsuario) {
-        new GetNewQuiz(idUsuario).execute("http://192.168.25.100/charadequizSlim/getnewquiz/");
+        new GetNewQuiz(idUsuario).execute(MeuIP + "/charadequizSlim/getnewquiz/");
         return new Quiz();
     }
 
@@ -145,21 +147,22 @@ public class DataStore {
     }
 
     public Quiz newChallange(Integer usuarioId) {
-        return new Quiz();
-
+        new GetNewQuiz(DataStore.sharedInstance().getPreferences().getUsuarioId()).execute(MeuIP + "/charadequizSlim/getnewquiz/");
+        return getQuiz();
     }
 
     public ResumeDto pegarResumo() {
-        new ResumeFinalDto(1).execute("http://192.168.25.100/charadequizSlim/resumoFinal/");
+        new ResumeFinalDto(1).execute(MeuIP + "/charadequizSlim/resumoFinal/");
 
         //TODO: Alterar ID..
         return null;
     }
 
     public MainDto pegarMain() {
-        new MainResume(DataStore.sharedInstance().getPreferences().getUsuarioId()).execute("http://192.168.25.100/charadequizSlim/resumoMain/");
+        new MainResume(DataStore.sharedInstance().getPreferences().getUsuarioId()).execute(MeuIP + "/charadequizSlim/resumoMain/");
         return null;
     }
+
 
     private class AddUsuario extends AsyncTask<String, Void, String> {
 

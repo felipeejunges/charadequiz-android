@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Toda a logica
 
-        MainDto main = DataStore.sharedInstance().pegarMain();
+//        MainDto main = DataStore.sharedInstance().pegarMain();
     }
 
     public void onClickIWantAChallange(View v) {
