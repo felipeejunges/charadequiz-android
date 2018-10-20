@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="170dp">
         <TextView
+            android:id="@+id/txtQuestion_Quiz"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorWhite"/>
