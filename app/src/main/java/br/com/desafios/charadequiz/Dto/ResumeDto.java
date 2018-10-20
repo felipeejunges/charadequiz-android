@@ -9,6 +9,8 @@ public class ResumeDto {
     int    acertos;
     int erros;
 
+    public ResumeDto() {}
+
     public ResumeDto(long esperado, long total, long medio, int acertos, int erros) {
         this.esperado = esperado;
         this.total = total;
