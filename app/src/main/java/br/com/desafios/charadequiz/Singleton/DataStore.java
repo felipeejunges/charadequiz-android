@@ -19,8 +19,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
+import java.util.List;
 
 
+import br.com.desafios.charadequiz.Model.Answer;
 import br.com.desafios.charadequiz.Model.Quiz;
 import br.com.desafios.charadequiz.Model.Usuario;
 import br.com.desafios.charadequiz.preferences.UsuarioLoginPreferences;
@@ -30,6 +32,8 @@ public class DataStore {
     private static DataStore instance = null;
 
     //private List<Quiz> quizzes;
+    private Quiz quiz;
+    private List<Answer> answers;
 
     private UsuarioLoginPreferences preferences;
     private Usuario usuario;
@@ -81,8 +85,10 @@ public class DataStore {
         return new Quiz();
     }
 
-    public Quiz saveResponses(Quiz quiz) {
-        //Já retorna dados das estatisticas
+    public Quiz saveResponses() {
+        // Pega o anwer do datastore mesmo
+        // E da um nullo no answer ou um new tanto faz
+        //Mesma coisa pro Quiz
         return new Quiz();
     }
 
@@ -234,6 +240,22 @@ public class DataStore {
             e.printStackTrace();
         }
         return userResult;
+    }
+
+    public Quiz getQuiz() {
+        return quiz;
+    }
+
+    public void setQuiz(Quiz quiz) {
+        this.quiz = quiz;
+    }
+
+    public List<Answer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<Answer> answers) {
+        this.answers = answers;
     }
 
     private class AddUsuario extends AsyncTask<String, Void, String> {

@@ -34,7 +34,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/txtQntRespondidos_Main"
+                android:id="@+id/txtQntRespondidos_Quiz"
                 android:layout_width="95dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -56,7 +56,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/txtTempoTotal_Main"
+                android:id="@+id/txtTempoTotal_Quiz"
                 android:layout_width="95dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="125dp"
@@ -79,7 +79,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/txtTempoMedio_Main"
+                android:id="@+id/txtTempoMedio_Quiz"
                 android:layout_width="95dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="250dp"
