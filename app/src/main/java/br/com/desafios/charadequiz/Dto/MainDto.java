@@ -5,6 +5,9 @@ public class MainDto {
     long tempoTotal;
     long tempoMedio;
 
+    public MainDto() {
+    }
+
     public MainDto(int respondidos, long tempoTotal, long tempoMedio) {
         this.respondidos = respondidos;
         this.tempoTotal = tempoTotal;
