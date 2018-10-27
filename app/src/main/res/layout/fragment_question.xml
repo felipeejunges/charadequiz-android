@@ -44,32 +44,32 @@
             android:paddingLeft="53dp"
             android:paddingRight="53dp"/>
     </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <Button
+            android:onClick="onRespostaC"
+            android:id="@+id/btnResponderC"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
-            <Button
-                android:onClick="onRespostaC"
-                android:id="@+id/btnResponderC"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/cyanColor"
-                android:text="c"
-                android:textSize="75sp"
-                android:paddingLeft="53dp"
-                android:paddingRight="53dp"/>
-            <Button
-                android:onClick="onRespostaD"
-                android:id="@+id/btnResponderD"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPurple"
-                android:text="D"
-                android:textSize="75sp"
-                android:paddingLeft="53dp"
-                android:paddingRight="53dp"/>
-        </LinearLayout>
+            android:textColor="@color/cyanColor"
+            android:text="c"
+            android:textSize="75sp"
+            android:paddingLeft="53dp"
+            android:paddingRight="53dp"/>
+        <Button
+            android:onClick="onRespostaD"
+            android:id="@+id/btnResponderD"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPurple"
+            android:text="D"
+            android:textSize="75sp"
+            android:paddingLeft="53dp"
+            android:paddingRight="53dp"/>
+    </LinearLayout>
 
 
 </LinearLayout>
