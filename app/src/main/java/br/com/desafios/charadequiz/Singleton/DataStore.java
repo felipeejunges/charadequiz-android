@@ -189,6 +189,7 @@ public class DataStore {
 
     public MainDto pegarMain() {
 
+
         new MainResume(DataStore.sharedInstance().getPreferences().getUsuarioId()).execute(MeuIP + "/charadequizSlim/resumoMain/"+DataStore.sharedInstance().getPreferences().getUsuarioId().toString());
         //return null;
 
@@ -197,7 +198,6 @@ public class DataStore {
             Log.d("teste ahhaa","Ta null!");
         }
         return mainDto;
-
     }
 
 
@@ -598,23 +598,6 @@ public class DataStore {
                 connection.setConnectTimeout(45000);
                 connection.setReadTimeout(30000);
                 connection.setRequestMethod("GET");
-                connection.setDoInput(true);
-                connection.setDoOutput(true);
-
-//                Uri.Builder builder = new Uri.Builder();
-//                builder.appendQueryParameter("userid", String.valueOf(userid));
-//                String qry = builder.build().getEncodedQuery();
-
-                OutputStream outputStream = connection.getOutputStream();
-                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
-                BufferedWriter writer = new BufferedWriter(outputStreamWriter);
-
-//                writer.write(qry);
-                writer.flush();
-
-                writer.close();
-                outputStreamWriter.close();
-                outputStream.close();
 
                 connection.connect();
 
@@ -648,10 +631,12 @@ public class DataStore {
 
             try {
                 JSONObject json = new JSONObject(jsonStr);
-                    mainDto = new MainDto();
-                    mainDto.setRespondidos( json.getInt("Total_Respondidos"));
-                    mainDto.setTempoMedio(  json.getInt("Tempo_Medio"));
-                    mainDto.setTempoTotal(  json.getInt("Tempo_Total"));
+                    mainresume = new MainDto();
+                mainresume.setRespondidos( json.getInt("Total_Respondidos"));
+                mainresume.setTempoMedio(  json.getInt("Tempo_Medio"));
+                mainresume.setTempoTotal(  json.getInt("Tempo_Total"));
+
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
