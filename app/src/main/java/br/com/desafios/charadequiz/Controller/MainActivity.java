@@ -39,11 +39,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Toda a logica
 
-        MainDto main = DataStore.sharedInstance().pegarMain();
+//         MainDto main = DataStore.sharedInstance().pegarMain();
 
-        tvRespondidos.setText(main.getRespondidos());
-        tvTotal.setText(new SimpleDateFormat("hh:mm:ss").format(new Timestamp(main.getTempoTotal())));
-        tvTotal.setText(new SimpleDateFormat("hh:mm:ss").format(new Timestamp(main.getTempoMedio())));
+//        tvRespondidos.setText(main.getRespondidos());
+//        tvTotal.setText(new SimpleDateFormat("hh:mm:ss").format(new Timestamp(main.getTempoTotal())));
+//        tvTotal.setText(new SimpleDateFormat("hh:mm:ss").format(new Timestamp(main.getTempoMedio())));
 
 //        MainDto main = DataStore.sharedInstance().pegarMain();
     }
