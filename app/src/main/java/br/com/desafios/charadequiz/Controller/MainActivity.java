@@ -38,9 +38,8 @@ public class MainActivity extends AppCompatActivity {
         tvMedia = findViewById(R.id.txtTempoMedio_Main);
 
         // Toda a logica
+//         MainDto main = DataStore.sharedInstance().pegarMain();
 
-//        MainDto main = DataStore.sharedInstance().pegarMain();
-//
 //        tvRespondidos.setText(main.getRespondidos());
 //        tvTotal.setText(new SimpleDateFormat("hh:mm:ss").format(new Timestamp(main.getTempoTotal())));
 //        tvTotal.setText(new SimpleDateFormat("hh:mm:ss").format(new Timestamp(main.getTempoMedio())));

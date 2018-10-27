@@ -45,7 +45,7 @@ public class DataStore {
     private Usuario usuario;
     private Context context;
 
-    private static String MeuIP = "http://fczcasa.ddns.net";
+    private static String MeuIP = "http://192.168.0.100";//"http://fczcasa.ddns.net";
 
     private MainDto mainDto;
 
@@ -116,11 +116,13 @@ public class DataStore {
 
 
 
-    public Quiz saveResponses() {
+    public int saveResponses() {
+
         // Pega o anwer do datastore mesmo
         // E da um nullo no answer ou um new tanto faz
         //Mesma coisa pro Quiz
-        return new Quiz();
+
+        return 1;
     }
 
     public Quiz generalResult(int id) {
@@ -186,8 +188,16 @@ public class DataStore {
     }
 
     public MainDto pegarMain() {
-        new MainResume(getPreferences().getUsuarioId()).execute(MeuIP + "/charadequizSlim/resumoMain/");
-        return null;
+
+        new MainResume(DataStore.sharedInstance().getPreferences().getUsuarioId()).execute(MeuIP + "/charadequizSlim/resumoMain/"+DataStore.sharedInstance().getPreferences().getUsuarioId().toString());
+        //return null;
+
+        while (mainDto == null)
+        {
+            Log.d("teste ahhaa","Ta null!");
+        }
+        return mainDto;
+
     }
 
 
@@ -200,8 +210,6 @@ public class DataStore {
 
             this.usuario = usuario;
         }
-
-
         @Override
         protected String doInBackground(String... urls) {
 
@@ -378,6 +386,186 @@ public class DataStore {
 
         }
     }
+    private class EnviarRespostas extends AsyncTask<String, Void, String> {
+
+        Integer Quiz_ID;
+        Integer Usuario_ID;
+
+        Integer Alternative_ID_1;
+        Integer Time_1;
+        Integer Alternative_ID_2;
+        Integer Time_2;
+        Integer Alternative_ID_3;
+        Integer Time_3;
+        Integer Alternative_ID_4;
+        Integer Time_4;
+        Integer Alternative_ID_5;
+        Integer Time_5;
+        Integer Alternative_ID_6;
+        Integer Time_6;
+        Integer Alternative_ID_7;
+        Integer Time_7;
+        Integer Alternative_ID_8;
+        Integer Time_8;
+        Integer Alternative_ID_9;
+        Integer Time_9;
+        Integer Alternative_ID_10;
+        Integer Time_10;
+
+        private ProgressDialog dialog = new ProgressDialog(context);
+
+        public EnviarRespostas(
+                Integer Quiz_ID,Integer Usuario_ID,
+
+                Integer Alternative_ID_1,Integer Time_1,
+                Integer Alternative_ID_2,Integer Time_2,
+                Integer Alternative_ID_3,Integer Time_3,
+                Integer Alternative_ID_4,Integer Time_4,
+                Integer Alternative_ID_5,Integer Time_5,
+                Integer Alternative_ID_6,Integer Time_6,
+                Integer Alternative_ID_7,Integer Time_7,
+                Integer Alternative_ID_8,Integer Time_8,
+                Integer Alternative_ID_9,Integer Time_9,
+                Integer Alternative_ID_10,Integer Time_10
+        )
+        {
+            this.Quiz_ID = Quiz_ID;
+            this.Usuario_ID = Usuario_ID;
+
+            this.Alternative_ID_1= Alternative_ID_1;
+            this.Alternative_ID_2= Alternative_ID_2;
+            this.Alternative_ID_3= Alternative_ID_3;
+            this.Alternative_ID_4= Alternative_ID_4;
+            this.Alternative_ID_5= Alternative_ID_5;
+            this.Alternative_ID_6= Alternative_ID_6;
+            this.Alternative_ID_7= Alternative_ID_7;
+            this.Alternative_ID_8= Alternative_ID_8;
+            this.Alternative_ID_9= Alternative_ID_9;
+            this.Alternative_ID_1= Alternative_ID_10;
+
+            this.Time_1 = Time_1;
+            this.Time_2 = Time_2;
+            this.Time_3 = Time_3;
+            this.Time_4 = Time_4;
+            this.Time_5 = Time_5;
+            this.Time_6 = Time_6;
+            this.Time_7 = Time_7;
+            this.Time_8 = Time_8;
+            this.Time_9 = Time_9;
+            this.Time_10 = Time_10;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            this.dialog.setMessage("Enviando Respostas");
+            this.dialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+
+            String jsonStr = "";
+
+            try {
+                URL url = new URL(urls[0]);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setConnectTimeout(45000);
+                connection.setReadTimeout(30000);
+                connection.setRequestMethod("POST");
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+
+                Uri.Builder builder = new Uri.Builder();
+
+                builder.appendQueryParameter("quiz_id", this.Quiz_ID.toString());
+                builder.appendQueryParameter("usuario_id", this.Usuario_ID.toString());
+                builder.appendQueryParameter("Alternative_id_1", this.Alternative_ID_1.toString());
+                builder.appendQueryParameter("Alternative_id_2", this.Alternative_ID_2.toString());
+                builder.appendQueryParameter("Alternative_id_3", this.Alternative_ID_3.toString());
+                builder.appendQueryParameter("Alternative_id_4", this.Alternative_ID_4.toString());
+                builder.appendQueryParameter("Alternative_id_5", this.Alternative_ID_5.toString());
+                builder.appendQueryParameter("Alternative_id_6", this.Alternative_ID_6.toString());
+                builder.appendQueryParameter("Alternative_id_7", this.Alternative_ID_7.toString());
+                builder.appendQueryParameter("Alternative_id_8", this.Alternative_ID_8.toString());
+                builder.appendQueryParameter("Alternative_id_9", this.Alternative_ID_9.toString());
+                builder.appendQueryParameter("Alternative_id_10", this.Alternative_ID_10.toString());
+                builder.appendQueryParameter("time_1", this.Time_1.toString());
+                builder.appendQueryParameter("time_2", this.Time_2.toString());
+                builder.appendQueryParameter("time_3", this.Time_3.toString());
+                builder.appendQueryParameter("time_4", this.Time_4.toString());
+                builder.appendQueryParameter("time_5", this.Time_5.toString());
+                builder.appendQueryParameter("time_6", this.Time_6.toString());
+                builder.appendQueryParameter("time_7", this.Time_7.toString());
+                builder.appendQueryParameter("time_8", this.Time_8.toString());
+                builder.appendQueryParameter("time_9", this.Time_9.toString());
+                builder.appendQueryParameter("time_10", this.Time_10.toString());
+
+                String qry = builder.build().getEncodedQuery();
+
+                OutputStream outputStream = connection.getOutputStream();
+                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
+                BufferedWriter writer = new BufferedWriter(outputStreamWriter);
+
+                writer.write(qry);
+                writer.flush();
+
+                writer.close();
+                outputStreamWriter.close();
+                outputStream.close();
+
+                connection.connect();
+
+                InputStream inputStream = connection.getInputStream();
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader reader = new BufferedReader(inputStreamReader);
+
+                String line = reader.readLine();
+                while (line != null) {
+                    jsonStr += line;
+                    line = reader.readLine();
+                }
+
+                reader.close();
+                inputStreamReader.close();
+                inputStream.close();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+
+            }
+
+            return jsonStr;
+        }
+
+        @Override
+        protected void onPostExecute(String jsonStr) {
+            super.onPostExecute(jsonStr);
+
+            try {
+                JSONObject json = new JSONObject(jsonStr);
+                if (json.getInt("id") != -1){
+                    usuario = new Usuario();
+                    usuario.setId(json.getInt("id"));
+                    usuario.setName(json.getString("name"));
+                    usuario.setCelphoneNumber(json.getString("cellphone_number"));
+                    usuario.setEmail(json.getString("email"));
+                    usuario.setPassword(json.getString("password"));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            DataStore.sharedInstance().getPreferences().salvarUsuario(usuario);
+
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+
+        }
+    }
 
     private class MainResume extends AsyncTask<String, Void, String> {
 
@@ -413,15 +601,15 @@ public class DataStore {
                 connection.setDoInput(true);
                 connection.setDoOutput(true);
 
-                Uri.Builder builder = new Uri.Builder();
-                builder.appendQueryParameter("userid", String.valueOf(userid));
-                String qry = builder.build().getEncodedQuery();
+//                Uri.Builder builder = new Uri.Builder();
+//                builder.appendQueryParameter("userid", String.valueOf(userid));
+//                String qry = builder.build().getEncodedQuery();
 
                 OutputStream outputStream = connection.getOutputStream();
                 OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
                 BufferedWriter writer = new BufferedWriter(outputStreamWriter);
 
-                writer.write(qry);
+//                writer.write(qry);
                 writer.flush();
 
                 writer.close();
