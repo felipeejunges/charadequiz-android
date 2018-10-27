@@ -44,21 +44,24 @@ public class QuestionFragment extends Fragment {
 
     private void popularCampos(Question question) {
         StringBuilder builder = new StringBuilder();
-        builder.append(question.getDescription());
+        builder.append(question.getDescription() + "\n");
         int i = 0;
         for(Alternative a : question.getAlternatives()) {
             builder.append(
                     verificaLetra(i) + ") " +
-                    a.getAnswer()
+                    a.getAnswer() + "\n"
             );
             i++;
         }
-        txtQuestion.setText(builder.toString());
+        String mensagem = builder.toString();
+        txtQuestion.setText(mensagem);
     }
 
     private String verificaLetra(int i) {
+        int num = 97 + i;
+        char asc = (char) num;
         return String.valueOf(
-                (char) 97 + i
+              asc
         );
     }
 }

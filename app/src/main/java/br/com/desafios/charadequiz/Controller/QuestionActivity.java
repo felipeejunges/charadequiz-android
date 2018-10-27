@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Chronometer;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -44,7 +45,7 @@ public class QuestionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
 
-        mPager = findViewById(R.id.cardView);
+        mPager = findViewById(R.id.customViewPager);
         fragments = new ArrayList<>();
 
 
@@ -57,46 +58,54 @@ public class QuestionActivity extends AppCompatActivity {
         DataStore.sharedInstance().setQuiz(quiz);
         DataStore.sharedInstance().setAnswers(new ArrayList<Answer>());
 
+
+        toQuestion(quiz);
+
         mPagerAdapter = new ScreenSlidePagerAdapter(this, getSupportFragmentManager(), fragments);
         mPager.setPagingEnabled(false);
         mPager.setAdapter(mPagerAdapter);
 
         initializer();
-        tvRespondidos.setText(0);
+        tvRespondidos.setText(String.valueOf(0));
 
-        for (Question q: quiz.getQuestions()) {
-            fragments.add(questionFragment = new QuestionFragment());
-            commitToFragment(getSupportFragmentManager(),questionFragment, q);
-        }
 
-        tvTotal = findViewById(R.id.chronometer);
+
+        // tvTotal = findViewById(R.id.txtTempoTotal_Quiz);
         tvTotal.setFormat("Time: %s");
         tvTotal.setBase(SystemClock.elapsedRealtime());
-
+        tvTotal.start();
         tvTotal.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
             @Override
             public void onChronometerTick(Chronometer chronometer) {
                 if ((SystemClock.elapsedRealtime() - chronometer.getBase()) >= 10000) {
-                    chronometer.setBase(SystemClock.elapsedRealtime());
-                    chronometer.start();
+                  //  chronometer.setBase(SystemClock.elapsedRealtime());
+                 //   Toast.makeText(QuestionActivity.this, "Bing!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        tvAtual = findViewById(R.id.chronometer);
+      //  tvAtual = findViewById(R.id.txtTempoMedio_Quiz);
         tvAtual.setFormat("Time: %s");
         tvAtual.setBase(SystemClock.elapsedRealtime());
-
+        tvAtual.start();
         tvAtual.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
             @Override
             public void onChronometerTick(Chronometer chronometer) {
                 if ((SystemClock.elapsedRealtime() - chronometer.getBase()) >= 10000) {
-                    chronometer.setBase(SystemClock.elapsedRealtime());
-                    chronometer.start();
+                  //  chronometer.setBase(SystemClock.elapsedRealtime());
+                   // Toast.makeText(QuestionActivity.this, "Bing!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
+    }
+
+    public void toQuestion(Quiz quiz) {
+        for (Question q: quiz.getQuestions()) {
+
+            fragments.add(questionFragment = new QuestionFragment());
+            commitToFragment(getSupportFragmentManager(),questionFragment, q);
+        }
     }
 
     private void initializer() {
@@ -130,7 +139,7 @@ public class QuestionActivity extends AppCompatActivity {
         }
        DataStore.sharedInstance().getAnswers().add(new Answer(0, tempo, alternative, quiz));
         qntRespondidos++;
-
+        tvRespondidos.setText(String.valueOf(qntRespondidos));
         tvAtual.setBase(SystemClock.elapsedRealtime());
 
         if(qntRespondidos == fragments.size()) {
