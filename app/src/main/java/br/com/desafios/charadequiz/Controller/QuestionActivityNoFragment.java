@@ -1,54 +1,41 @@
 package br.com.desafios.charadequiz.Controller;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Chronometer;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import br.com.desafios.charadequiz.Adapters.CustomViewPager;
-import br.com.desafios.charadequiz.Adapters.ScreenSlidePagerAdapter;
 import br.com.desafios.charadequiz.Model.Alternative;
 import br.com.desafios.charadequiz.Model.Answer;
 import br.com.desafios.charadequiz.Model.Question;
 import br.com.desafios.charadequiz.Model.Quiz;
 import br.com.desafios.charadequiz.R;
 import br.com.desafios.charadequiz.Singleton.DataStore;
-//https://codinginflow.com/tutorials/android/chronometer
-public class QuestionActivity extends AppCompatActivity {
 
-    private CustomViewPager mPager;
-    private PagerAdapter mPagerAdapter;
-    private List<Fragment> fragments;
-    private QuestionFragment questionFragment;
+//https://codinginflow.com/tutorials/android/chronometer
+public class QuestionActivityNoFragment extends AppCompatActivity {
+
     private TextView tvRespondidos;
+    private TextView txtQuestion_Quiz;
     private Chronometer tvTotal;
     private Chronometer tvAtual;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_question);
-
-        mPager = findViewById(R.id.customViewPager);
-        fragments = new ArrayList<>();
-
-
+        setContentView(R.layout.activity_question_nofragment);
 
         DataStore.sharedInstance().setContext(this);
         Quiz quiz = DataStore.sharedInstance().newChallange(
@@ -58,17 +45,11 @@ public class QuestionActivity extends AppCompatActivity {
         DataStore.sharedInstance().setQuiz(quiz);
         DataStore.sharedInstance().setAnswers(new ArrayList<Answer>());
 
-
-        toQuestion(quiz);
-
-        mPagerAdapter = new ScreenSlidePagerAdapter(this, getSupportFragmentManager(), fragments);
-        mPager.setPagingEnabled(false);
-        mPager.setAdapter(mPagerAdapter);
-
         initializer();
         tvRespondidos.setText(String.valueOf(0));
 
 
+        carregaPergunta(DataStore.sharedInstance().getQuiz().getQuestions().get(0));
 
         // tvTotal = findViewById(R.id.txtTempoTotal_Quiz);
         tvTotal.setFormat("Time: %s");
@@ -100,18 +81,15 @@ public class QuestionActivity extends AppCompatActivity {
 
     }
 
-    public void toQuestion(Quiz quiz) {
-        for (Question q: quiz.getQuestions()) {
-
-            fragments.add(questionFragment = new QuestionFragment());
-            commitToFragment(getSupportFragmentManager(),questionFragment, q);
-        }
+    private void carregaPergunta(Question question) {
+        txtQuestion_Quiz.setText(question.getDescription());
     }
 
     private void initializer() {
         tvRespondidos = findViewById(R.id.txtQntRespondidos_Quiz);
         tvTotal = findViewById(R.id.txtTempoTotal_Quiz);
         tvAtual = findViewById(R.id.txtTempoMedio_Quiz);
+        txtQuestion_Quiz = findViewById(R.id.txtQuestion_Quiz);
 
     }
 
@@ -142,19 +120,17 @@ public class QuestionActivity extends AppCompatActivity {
         tvRespondidos.setText(String.valueOf(qntRespondidos));
         tvAtual.setBase(SystemClock.elapsedRealtime());
 
-        if(qntRespondidos == fragments.size()) {
+        if(qntRespondidos == DataStore.sharedInstance().getQuiz().getQuestions().size()) {
             tvTotal.stop();
             DataStore.sharedInstance().saveResponses();
-            Intent intent = new Intent(QuestionActivity.this, ResumeActivity.class);
+            Intent intent = new Intent(QuestionActivityNoFragment.this, ResumeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
             finish();
-
         } else {
             tvAtual.start();
-            mPager.setCurrentItem(mPager.getCurrentItem() + 1, true);
-
+            carregaPergunta(DataStore.sharedInstance().getQuiz().getQuestions().get(qntRespondidos));
         }
 
     }
@@ -166,7 +142,7 @@ public class QuestionActivity extends AppCompatActivity {
         message.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Intent irTelaMain = new Intent(QuestionActivity.this, MainActivity.class);
+                Intent irTelaMain = new Intent(QuestionActivityNoFragment.this, MainActivity.class);
                 irTelaMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                         | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(irTelaMain);
@@ -182,7 +158,7 @@ public class QuestionActivity extends AppCompatActivity {
         try {
 
             Date parsedDate = dateFormat.parse(str);
-            return new java.sql.Timestamp(parsedDate.getTime());
+            return new Timestamp(parsedDate.getTime());
         } catch(Exception e) { //this generic but you can control another types of exception
 
             return null;

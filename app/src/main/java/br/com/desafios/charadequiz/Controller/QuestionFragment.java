@@ -17,6 +17,7 @@ import br.com.desafios.charadequiz.R;
 public class QuestionFragment extends Fragment {
 
     private TextView txtQuestion;
+    private Question question;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,11 +37,12 @@ public class QuestionFragment extends Fragment {
         
         Bundle parametros = getArguments();
         if(parametros != null) {
-            Question question = (Question) parametros.getSerializable("question");
+            question = (Question) parametros.getSerializable("question");
             popularCampos(question);
         }
         
     }
+
 
     private void popularCampos(Question question) {
         StringBuilder builder = new StringBuilder();
@@ -63,5 +65,9 @@ public class QuestionFragment extends Fragment {
         return String.valueOf(
               asc
         );
+    }
+
+    public Question getQuestion() {
+        return question;
     }
 }
