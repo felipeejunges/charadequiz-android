@@ -94,76 +94,12 @@
         </android.support.constraint.ConstraintLayout>
 
     </android.support.v7.widget.CardView>
-
-    <LinearLayout
+    <br.com.desafios.charadequiz.Adapters.CustomViewPager
+        android:id="@+id/customViewPager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="80dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="60dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="170dp">
-            <TextView
-                android:id="@+id/txtQuestion_Quiz"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorWhite"/>
-        </ScrollView>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
-
-            <Button
-                android:onClick="onRespostaA"
-                android:id="@+id/btnResponderA"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPink"
-                android:text="A"
-                android:textSize="75sp"
-                android:paddingLeft="53dp"
-                android:paddingRight="53dp"/>
-            <Button
-                android:onClick="onRespostaB"
-                android:id="@+id/btnResponderB"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorAccent"
-                android:text="B"
-                android:textSize="75sp"
-                android:paddingLeft="53dp"
-                android:paddingRight="53dp"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
-            <Button
-                android:onClick="onRespostaC"
-                android:id="@+id/btnResponderC"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/cyanColor"
-                android:text="c"
-                android:textSize="75sp"
-                android:paddingLeft="53dp"
-                android:paddingRight="53dp"/>
-            <Button
-                android:onClick="onRespostaD"
-                android:id="@+id/btnResponderD"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPurple"
-                android:text="D"
-                android:textSize="75sp"
-                android:paddingLeft="53dp"
-                android:paddingRight="53dp"/>
-        </LinearLayout>
-    </LinearLayout>
-
+        app:layout_constraintTop_toTopOf="parent"></br.com.desafios.charadequiz.Adapters.CustomViewPager>
 </android.support.constraint.ConstraintLayout>

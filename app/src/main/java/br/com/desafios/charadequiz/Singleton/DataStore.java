@@ -122,6 +122,20 @@ public class DataStore {
         // E da um nullo no answer ou um new tanto faz
         //Mesma coisa pro Quiz
 
+
+        new EnviarRespostas(quiz.getId(), DataStore.sharedInstance().preferences.getUsuarioId(),
+                quiz.getAnswers().get(0).getAlternative().getId(), quiz.getAnswers().get(0).getTime(),
+                quiz.getAnswers().get(1).getAlternative().getId(), quiz.getAnswers().get(0).getTime(),
+                quiz.getAnswers().get(2).getAlternative().getId(), quiz.getAnswers().get(0).getTime(),
+                quiz.getAnswers().get(3).getAlternative().getId(), quiz.getAnswers().get(0).getTime(),
+                quiz.getAnswers().get(4).getAlternative().getId(), quiz.getAnswers().get(0).getTime(),
+                quiz.getAnswers().get(5).getAlternative().getId(), quiz.getAnswers().get(0).getTime(),
+                quiz.getAnswers().get(6).getAlternative().getId(), quiz.getAnswers().get(0).getTime(),
+                quiz.getAnswers().get(7).getAlternative().getId(), quiz.getAnswers().get(0).getTime(),
+                quiz.getAnswers().get(8).getAlternative().getId(), quiz.getAnswers().get(0).getTime(),
+                quiz.getAnswers().get(9).getAlternative().getId(), quiz.getAnswers().get(0).getTime()
+                ).execute(MeuIP + "/charadequizSlim/registro/");
+
         return 1;
     }
 
@@ -392,43 +406,42 @@ public class DataStore {
         Integer Usuario_ID;
 
         Integer Alternative_ID_1;
-        Integer Time_1;
+        long Time_1;
         Integer Alternative_ID_2;
-        Integer Time_2;
+        long Time_2;
         Integer Alternative_ID_3;
-        Integer Time_3;
+        long Time_3;
         Integer Alternative_ID_4;
-        Integer Time_4;
+        long Time_4;
         Integer Alternative_ID_5;
-        Integer Time_5;
+        long Time_5;
         Integer Alternative_ID_6;
-        Integer Time_6;
+        long Time_6;
         Integer Alternative_ID_7;
-        Integer Time_7;
+        long Time_7;
         Integer Alternative_ID_8;
-        Integer Time_8;
+        long Time_8;
         Integer Alternative_ID_9;
-        Integer Time_9;
+        long Time_9;
         Integer Alternative_ID_10;
-        Integer Time_10;
+        long Time_10;
 
         private ProgressDialog dialog = new ProgressDialog(context);
 
         public EnviarRespostas(
                 Integer Quiz_ID,Integer Usuario_ID,
 
-                Integer Alternative_ID_1,Integer Time_1,
-                Integer Alternative_ID_2,Integer Time_2,
-                Integer Alternative_ID_3,Integer Time_3,
-                Integer Alternative_ID_4,Integer Time_4,
-                Integer Alternative_ID_5,Integer Time_5,
-                Integer Alternative_ID_6,Integer Time_6,
-                Integer Alternative_ID_7,Integer Time_7,
-                Integer Alternative_ID_8,Integer Time_8,
-                Integer Alternative_ID_9,Integer Time_9,
-                Integer Alternative_ID_10,Integer Time_10
-        )
-        {
+                Integer Alternative_ID_1,long Time_1,
+                Integer Alternative_ID_2,long Time_2,
+                Integer Alternative_ID_3,long Time_3,
+                Integer Alternative_ID_4,long Time_4,
+                Integer Alternative_ID_5,long Time_5,
+                Integer Alternative_ID_6,long Time_6,
+                Integer Alternative_ID_7,long Time_7,
+                Integer Alternative_ID_8,long Time_8,
+                Integer Alternative_ID_9,long Time_9,
+                Integer Alternative_ID_10,long Time_10
+        ) {
             this.Quiz_ID = Quiz_ID;
             this.Usuario_ID = Usuario_ID;
 
@@ -491,16 +504,16 @@ public class DataStore {
                 builder.appendQueryParameter("Alternative_id_8", this.Alternative_ID_8.toString());
                 builder.appendQueryParameter("Alternative_id_9", this.Alternative_ID_9.toString());
                 builder.appendQueryParameter("Alternative_id_10", this.Alternative_ID_10.toString());
-                builder.appendQueryParameter("time_1", this.Time_1.toString());
-                builder.appendQueryParameter("time_2", this.Time_2.toString());
-                builder.appendQueryParameter("time_3", this.Time_3.toString());
-                builder.appendQueryParameter("time_4", this.Time_4.toString());
-                builder.appendQueryParameter("time_5", this.Time_5.toString());
-                builder.appendQueryParameter("time_6", this.Time_6.toString());
-                builder.appendQueryParameter("time_7", this.Time_7.toString());
-                builder.appendQueryParameter("time_8", this.Time_8.toString());
-                builder.appendQueryParameter("time_9", this.Time_9.toString());
-                builder.appendQueryParameter("time_10", this.Time_10.toString());
+                builder.appendQueryParameter("time_1", String.valueOf(this.Time_1));
+                builder.appendQueryParameter("time_2", String.valueOf(this.Time_2));
+                builder.appendQueryParameter("time_3", String.valueOf(this.Time_3));
+                builder.appendQueryParameter("time_4", String.valueOf(this.Time_4));
+                builder.appendQueryParameter("time_5", String.valueOf(this.Time_5));
+                builder.appendQueryParameter("time_6", String.valueOf(this.Time_6));
+                builder.appendQueryParameter("time_7", String.valueOf(this.Time_7));
+                builder.appendQueryParameter("time_8", String.valueOf(this.Time_8));
+                builder.appendQueryParameter("time_9", String.valueOf(this.Time_9));
+                builder.appendQueryParameter("time_10", String.valueOf(this.Time_10));
 
                 String qry = builder.build().getEncodedQuery();
 
