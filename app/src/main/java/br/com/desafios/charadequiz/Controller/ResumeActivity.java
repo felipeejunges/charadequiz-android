@@ -33,13 +33,16 @@ public class ResumeActivity extends Activity {
         txtAcertos_Resume = findViewById(R.id.txtAcertos_Resume);
         txtErros_Resume = findViewById(R.id.txtErros_Resume);
 
-        ResumeDto resume = DataStore.sharedInstance().pegarResumo();
+        Intent intent = getIntent();
+        int quizId = (int) intent.getSerializableExtra("quizId");
 
-        txtTempoEsperado_Resume.setText(new SimpleDateFormat("hh:mm:ss").format(new Timestamp(resume.getEsperado())));
-        txtTempoTotal_Resume.setText(new SimpleDateFormat("hh:mm:ss").format(new Timestamp(resume.getTotal())));
-        txtTempoMedio_Resume.setText(new SimpleDateFormat("hh:mm:ss").format(new Timestamp(resume.getEsperado())));
-        txtAcertos_Resume.setText(resume.getAcertos());
-        txtErros_Resume.setText(resume.getErros());
+        ResumeDto resume = DataStore.sharedInstance().pegarResumo(quizId);
+
+        txtTempoEsperado_Resume.setText(String.valueOf(new SimpleDateFormat("hh:mm:ss").format(new Timestamp(resume.getEsperado()))));
+        txtTempoTotal_Resume.setText(String.valueOf(new SimpleDateFormat("hh:mm:ss").format(new Timestamp(resume.getTotal()))));
+        txtTempoMedio_Resume.setText(String.valueOf(new SimpleDateFormat("hh:mm:ss").format(new Timestamp(resume.getMedio()))));
+        txtAcertos_Resume.setText(String.valueOf(resume.getAcertos()));
+        txtErros_Resume.setText(String.valueOf(resume.getErros()));
 
     }
 

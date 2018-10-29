@@ -142,12 +142,15 @@ public class QuestionActivity extends AppCompatActivity {
         tvRespondidos.setText(String.valueOf(qntRespondidos));
         tvAtual.setBase(SystemClock.elapsedRealtime());
 
+        int size = DataStore.sharedInstance().getAnswers().size();
+
         if(qntRespondidos == fragments.size()) {
             tvTotal.stop();
             DataStore.sharedInstance().saveResponses();
             Intent intent = new Intent(QuestionActivity.this, ResumeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
+            intent.putExtra("quizId", quiz.getId());
             startActivity(intent);
             finish();
 
