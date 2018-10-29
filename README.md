@@ -6,4 +6,4 @@
 <a href="https://github.com/felipeejunges/">FELIPE JUNGES</a><br>
 
 ## Camada WebService
-<a href="https://github.com/AndreValvassori/charadequizSlim">Webservice</a><br>
+<a href="https://github.com/AndreValvassori/charadequizSlim">WebService</a><br>
