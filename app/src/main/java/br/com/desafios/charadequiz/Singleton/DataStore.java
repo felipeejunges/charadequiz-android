@@ -48,6 +48,8 @@ public class DataStore {
     private static String MeuIP = "http://192.168.0.100";//"http://fczcasa.ddns.net";
 
     private MainDto mainDto;
+    private ResumeDto resumeDto;
+
 
     protected DataStore() {}
 
@@ -124,17 +126,17 @@ public class DataStore {
 
 
         new EnviarRespostas(quiz.getId(), DataStore.sharedInstance().preferences.getUsuarioId(),
-                quiz.getAnswers().get(0).getAlternative().getId(), quiz.getAnswers().get(0).getTime(),
-                quiz.getAnswers().get(1).getAlternative().getId(), quiz.getAnswers().get(0).getTime(),
-                quiz.getAnswers().get(2).getAlternative().getId(), quiz.getAnswers().get(0).getTime(),
-                quiz.getAnswers().get(3).getAlternative().getId(), quiz.getAnswers().get(0).getTime(),
-                quiz.getAnswers().get(4).getAlternative().getId(), quiz.getAnswers().get(0).getTime(),
-                quiz.getAnswers().get(5).getAlternative().getId(), quiz.getAnswers().get(0).getTime(),
-                quiz.getAnswers().get(6).getAlternative().getId(), quiz.getAnswers().get(0).getTime(),
-                quiz.getAnswers().get(7).getAlternative().getId(), quiz.getAnswers().get(0).getTime(),
-                quiz.getAnswers().get(8).getAlternative().getId(), quiz.getAnswers().get(0).getTime(),
-                quiz.getAnswers().get(9).getAlternative().getId(), quiz.getAnswers().get(0).getTime()
-                ).execute(MeuIP + "/charadequizSlim/registro/");
+                getAnswers().get(0).getAlternative().getId(), getAnswers().get(0).getTime(),
+                getAnswers().get(1).getAlternative().getId(), getAnswers().get(1).getTime(),
+                getAnswers().get(2).getAlternative().getId(), getAnswers().get(2).getTime(),
+                getAnswers().get(3).getAlternative().getId(), getAnswers().get(3).getTime(),
+                getAnswers().get(4).getAlternative().getId(), getAnswers().get(4).getTime(),
+                getAnswers().get(5).getAlternative().getId(), getAnswers().get(5).getTime(),
+                getAnswers().get(6).getAlternative().getId(), getAnswers().get(6).getTime(),
+                getAnswers().get(7).getAlternative().getId(), getAnswers().get(7).getTime(),
+                getAnswers().get(8).getAlternative().getId(), getAnswers().get(8).getTime(),
+                getAnswers().get(9).getAlternative().getId(), getAnswers().get(9).getTime()
+                ).execute(MeuIP + "/charadequizSlim/enviarRespostas/");
 
         return 1;
     }
@@ -194,23 +196,35 @@ public class DataStore {
         return getQuiz();
     }
 
-    public ResumeDto pegarResumo() {
-        new ResumeFinalDto(1).execute(MeuIP + "/charadequizSlim/resumoFinal/");
+    public ResumeDto pegarResumo(int quizId) {
+        try {
+            new ResumeFinalDto(quizId).execute(MeuIP + "/charadequizSlim/resumoFinal/"+String.valueOf(quizId)).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
         //TODO: Alterar ID..
-        return null;
+        return resumeDto;
     }
 
     public MainDto pegarMain() {
 
 
-        new MainResume(DataStore.sharedInstance().getPreferences().getUsuarioId()).execute(MeuIP + "/charadequizSlim/resumoMain/"+DataStore.sharedInstance().getPreferences().getUsuarioId().toString());
+        try {
+            new MainResume(DataStore.sharedInstance().getPreferences().getUsuarioId()).execute(MeuIP + "/charadequizSlim/resumoMain/"+DataStore.sharedInstance().getPreferences().getUsuarioId().toString()).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
         //return null;
 
-        while (mainDto == null)
+/*        while (mainDto == null)
         {
             Log.d("teste ahhaa","Ta null!");
-        }
+        }*/
         return mainDto;
     }
 
@@ -220,8 +234,8 @@ public class DataStore {
         private Usuario usuario;
 
 
-        public AddUsuario(Usuario usuario) {
 
+        public AddUsuario(Usuario usuario) {
             this.usuario = usuario;
         }
         @Override
@@ -454,7 +468,7 @@ public class DataStore {
             this.Alternative_ID_7= Alternative_ID_7;
             this.Alternative_ID_8= Alternative_ID_8;
             this.Alternative_ID_9= Alternative_ID_9;
-            this.Alternative_ID_1= Alternative_ID_10;
+            this.Alternative_ID_10= Alternative_ID_10;
 
             this.Time_1 = Time_1;
             this.Time_2 = Time_2;
@@ -582,8 +596,6 @@ public class DataStore {
 
     private class MainResume extends AsyncTask<String, Void, String> {
 
-        private MainDto mainresume;
-
         int userid;
 
         private ProgressDialog dialog = new ProgressDialog(context);
@@ -635,6 +647,17 @@ public class DataStore {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            try {
+                JSONObject json = new JSONObject(jsonStr);
+                mainDto = new MainDto();
+                mainDto.setRespondidos( json.getInt("Total_Respondidos"));
+                mainDto.setTempoMedio(  json.getInt("Tempo_Medio"));
+                mainDto.setTempoTotal(  json.getInt("Tempo_Total"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
             return jsonStr;
         }
 
@@ -642,19 +665,18 @@ public class DataStore {
         protected void onPostExecute(String jsonStr) {
             super.onPostExecute(jsonStr);
 
-            try {
+/*            try {
                 JSONObject json = new JSONObject(jsonStr);
-                    mainresume = new MainDto();
-                mainresume.setRespondidos( json.getInt("Total_Respondidos"));
-                mainresume.setTempoMedio(  json.getInt("Tempo_Medio"));
-                mainresume.setTempoTotal(  json.getInt("Tempo_Total"));
-
+                    mainDto = new MainDto();
+                    mainDto.setRespondidos( json.getInt("Total_Respondidos"));
+                    mainDto.setTempoMedio(  json.getInt("Tempo_Medio"));
+                    mainDto.setTempoTotal(  json.getInt("Tempo_Total"));
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            getPreferences().salvarUsuario(usuario);
-
+            //getPreferences().salvarUsuario(usuario);
+*/
             if (dialog.isShowing()) {
                 dialog.dismiss();
             }
@@ -663,7 +685,6 @@ public class DataStore {
 
     private class ResumeFinalDto extends AsyncTask<String, Void, String> {
 
-        private ResumeDto resumeDto;
 
         int id;
 
@@ -677,7 +698,7 @@ public class DataStore {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            this.dialog.setMessage("Carregando Resumo Principal");
+            this.dialog.setMessage("Carregando Resumo Final");
             this.dialog.show();
         }
 
@@ -692,23 +713,6 @@ public class DataStore {
                 connection.setConnectTimeout(45000);
                 connection.setReadTimeout(30000);
                 connection.setRequestMethod("GET");
-                connection.setDoInput(true);
-                connection.setDoOutput(true);
-
-                Uri.Builder builder = new Uri.Builder();
-                builder.appendQueryParameter("id", String.valueOf(id));
-                String qry = builder.build().getEncodedQuery();
-
-                OutputStream outputStream = connection.getOutputStream();
-                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
-                BufferedWriter writer = new BufferedWriter(outputStreamWriter);
-
-                writer.write(qry);
-                writer.flush();
-
-                writer.close();
-                outputStreamWriter.close();
-                outputStream.close();
 
                 connection.connect();
 
@@ -733,12 +737,6 @@ public class DataStore {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return jsonStr;
-        }
-
-        @Override
-        protected void onPostExecute(String jsonStr) {
-            super.onPostExecute(jsonStr);
 
             try {
                 JSONObject json = new JSONObject(jsonStr);
@@ -751,7 +749,13 @@ public class DataStore {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            getPreferences().salvarUsuario(usuario);
+
+            return jsonStr;
+        }
+
+        @Override
+        protected void onPostExecute(String jsonStr) {
+            super.onPostExecute(jsonStr);
 
             if (dialog.isShowing()) {
                 dialog.dismiss();
@@ -829,8 +833,8 @@ public class DataStore {
                 JSONArray c = json.getJSONArray("questions");
                 for (int i = 0 ; i < c.length(); i++)
                 {
-                    // Para fins de testes e academicos
-                    if(i == 5) {
+                    // Para fins de testes e academicos/
+                    if(i == 10) {
                         break;
                     }
 
